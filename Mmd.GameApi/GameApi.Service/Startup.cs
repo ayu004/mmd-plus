@@ -49,7 +49,17 @@ namespace GameApi.Service
             
             services.AddScoped<RequestContext>();
             services.AddScoped<EvaluationModule>();
-            
+
+            //Added CORS Enabling policy
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
+
+
             services.AddScoped<GameContext>(factory =>
             {
                 try
@@ -79,7 +89,8 @@ namespace GameApi.Service
             
             services.AddControllers().AddNewtonsoftJson();
 
-            string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+            //string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+            string connectionString = "Server=localhost;Port=5432;Database=codecomp;User ID=postgres;Password=password;";
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseNpgsql(connectionString);
@@ -95,6 +106,8 @@ namespace GameApi.Service
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("MyPolicy");
 
             app.UseHttpsRedirection();
 

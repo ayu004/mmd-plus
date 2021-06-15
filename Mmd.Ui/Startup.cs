@@ -43,6 +43,8 @@ namespace mmd_plus
 
             services.AddLogging();
 
+            services.AddSwaggerDocument(); //My addition
+
             services.AddScoped(typeof(IEntityBaseRepository<>), typeof(EntityBaseRepository<>));
 
             services.AddScoped<IUserRepository, UserRepository>();
@@ -117,6 +119,10 @@ namespace mmd_plus
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseOpenApi();    //My Addition
+            app.UseSwaggerUi3();
+
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>

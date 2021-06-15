@@ -1,0 +1,346 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "url": "https://localhost:5001"
+    }
+  ],
+  "tags": [
+    {
+      "name": "APIs"
+    }
+  ],
+  "paths": {
+    "/api/gamestatus": {
+      "get": {
+        "tags": [
+          "APIs"
+        ],
+        "description": "This API call gets you the current game status",
+        "responses": {
+          "200": {
+            "description": "Current Status of the entire game",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameStatusApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Failed to fetch Current Gamestatus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApiResponse"
+                }
+              }
+            }
+          }
+
+        },
+        "servers": [
+          {
+            "url": "https://localhost:5001"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://localhost:5001"
+        }
+      ]
+    },
+    "/api/join": {
+      "post": {
+        "security": [
+          {
+            "basic": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "APIs"
+        ],
+        "description": "This API call lets you join the game if the game is in joining state",
+        "responses": {
+          "200": {
+            "description": "Join api called successfully",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string",
+                  "example": "JSON String"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Failed to fetch Current Gamestatus",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApiResponse"
+                }
+              }
+            }
+          }
+
+        },
+        "servers": [
+          {
+            "url": "https://localhost:5001"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://localhost:5001"
+        }
+      ]
+    },
+    "/api/guess": {
+      "post": {
+        "security": [
+          {
+            "basic": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "APIs"
+        ],
+        "description": "This API call lets you guess codes for the competing teams",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "$ref": "#/components/schemas/GuessApiRequestBody"
+
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Guess api called successfully",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuessApiResponse"
+
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Guess Api called when game is not in running phase or Guess Limit in a single request exceeded or you haven't joined round or your team is dead or your request is invalid",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApiResponse"
+
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. Failed to fetch gamestatus",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApiResponse"
+
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://localhost:5001"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://localhost:5001"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "guesses": {
+        "type": "object",
+        "properties": {
+          "guess": {
+            "type": "string"
+          },
+          "team": {
+            "type": "string"
+          }
+        }
+      },
+      "GuessApiRequestBody": {
+        "type": "object",
+        "properties": {
+          "guesses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/guesses"
+            }
+          }
+        }
+      },
+      "GameStatusApiResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "err": {
+            "type": "object",
+            "example": "null"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "gameId": {
+                "type": "string"
+              },
+              "roundId": {
+                "type": "string"
+              },
+              "roundNumber": {
+                "type": "integer"
+              },
+              "status": {
+                "type": "string"
+              },
+              "secretLength": {
+                "type": "integer"
+              },
+              "participants": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "teamId": {
+                      "type": "string"
+                    },
+                    "currentScore": {
+                      "type": "string"
+                    },
+                    "totalScore": {
+                      "type": "string"
+                    },
+                    "isAlive": {
+                      "type": "boolean"
+                    },
+                    "isRobot": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "GuessApiResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "err": {
+            "type": "object",
+            "example": "null"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "guesses": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "targetTeam": {
+                      "type": "string"
+                    },
+                    "guess": {
+                      "type": "string"
+                    },
+                    "noOfDigitsMatchedByPositionAndValue": {
+                      "type": "integer"
+                    },
+                    "noOfDigitsMatchedByValue": {
+                      "type": "integer"
+                    },
+                    "score": {
+                      "type": "integer"
+                    },
+                    "isValid": {
+                      "type": "boolean"
+                    },
+                    "errMessage": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "gameId": {
+                "type": "string"
+              },
+              "roundId": {
+                "type": "string"
+              },
+              "roundNumber": {
+                "type": "integer"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ErrorApiResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "err": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          },
+          "data": {
+            "type": "object",
+            "example": "null"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "basic": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    }
+  }
+}
+
+ 

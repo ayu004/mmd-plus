@@ -72,6 +72,8 @@ namespace Mmd.GameController
  
                 string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION") ?? configuration.GetConnectionString("CodeCompDatabase");
 
+                Console.WriteLine(connectionString);
+
                 serviceCollection.AddDbContext<DataContext>(options =>
                 {
                     options.UseNpgsql(connectionString);

@@ -2,4 +2,39 @@
     ViewData["Title"] = "API Doc";
 }
 
-<h1>API Doc</h1>
+
+@section Styles {
+    <link href="@Url.Content("swaggercss/swagger-ui.css")" rel="stylesheet" type="text/css" />
+}
+<div class="container">
+    <h1 class="text-center">API Documentation</h1>
+
+    <div class="text-center">
+        There are 3 end points shown below (getstatus, join and guess). You can click on an endpoint to learn more about it.<br/> To sample an endpoint fill out the path and query parameters in the text boxes(if neccessry), and finally click the Try It Out button for that endpoint.
+    </div>
+
+    <div id="swagger-ui"></div>
+</div>
+
+@section Scripts
+{
+
+    <script src="swaggercss/swagger-ui-bundle.js"></script>
+    <script src="swaggercss/swagger-ui-standalone-preset.js"></script>
+
+    <script>
+window.onload = function() {
+  const ui = SwaggerUIBundle({
+      url: "openapi.json",
+    dom_id: '#swagger-ui',
+    presets: [
+      SwaggerUIBundle.presets.apis,
+      SwaggerUIStandalonePreset
+    ]
+  })
+
+  window.ui = ui
+}
+    </script>
+
+}
